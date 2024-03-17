@@ -13,7 +13,7 @@ def text_to_dict(text):
         result[key] = value
     return result
 
-anthropic_api_key = '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'
+anthropic_api_key = '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'
 
 anthropic = Anthropic(
     api_key= anthropic_api_key,
