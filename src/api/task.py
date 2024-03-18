@@ -64,8 +64,7 @@ class ListTaskResource(Resource):
 def add_task(name, due_date, priority, access_token):
     print("Line 47")
     user = db.query(User).filter(User.access_token == access_token).first()
-    task = db.query(Task).filter(Task.name == name and Task.user_id == user.id).first()
-    # print(task)
+    task = db.query(Task).filter(Task.name == name).filter(Task.user_id == user.id).first()
     
     if task:
         return {'message': f'Task with name: "{name}" already exists'}, 409
@@ -104,6 +103,7 @@ def delete_task(name, access_token):
 def list_tasks(access_token):
     user = db.query(User).filter(User.access_token == access_token).first()
     tasks = db.query(Task).filter(Task.user_id == user.id).all()
+    print(user.id)
     if not tasks:
         return {'message': 'No tasks found for you'}, 404
     tasks = [task.__dict__ for task in tasks]

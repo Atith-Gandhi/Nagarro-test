@@ -118,72 +118,74 @@ def chatbot():
             conversation.append(user_input)
             user_input = parse_prompt(user_input)
 
-        try:
-            if user_input['task_type'] is None or user_input['task_type'] not in ["Create", "Edit", "Delete", "List"] :
-                response = "Sorry I was not able to understand task type(Create, Edit, List, or Delete). Please try writing a new prompt which clearly talks about the task type!"
-                print(response)
-                conversation.append(response)
-                return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
-            
-            if user_input['task_name'] is None:
-                response = "Sorry I was not able to understand the task name. Please try writing a new prompt which clearly talks about the task name!"
-                print(response)
-                conversation.append(response)
-                return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
-            else:
-                if user_input['task_name'][len(user_input['task_name'])-1] == ' ':
-                    user_input['task_name'] = user_input['task_name'][:-1]
-                    
-            if user_input['task_type'] == "Create":
-                if user_input['timestamp'] is None:
-                    response = "Sorry I was not able to understand the due date. Please try writing a new prompt which clearly tells what is the due date of the task! The prompt should mention the Year, day and hour of the due date!"
-                    print(response)
-                    conversation.append(response)
-                    return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
-                
-                if user_input['priority'] is None:
-                    response = "Sorry I was not able to understand the priority. Priority of the task should be between 1-5.  Please try writing a new prompt which clearly tells what is the priority(1-5) of the task!"
-                    print(response)
-                    conversation.append(response)
-                    return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
-                
-                response = add_task(user_input['task_name'], user_input['timestamp'], user_input['priority'], session['access_token'])
-        
-            
-            if user_input['task_type'] == "Edit":
-                if 'priority' not in user_input:
-                    user_input['priority'] = None
-                if 'timestamp' not in user_input:
-                    user_input['timestamp'] = None
-
-                response = edit_task(user_input['task_name'], user_input['timestamp'], user_input['priority'], session['access_token'])
-                if response[1] == 404:
-                    conversation.append(response[0]['message'])
-                    print(response[0]['message'])
-                    return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
-            
-            if user_input['task_type'] == "Delete":
-                print("Line 165")
-                response = delete_task(user_input['task_name'], session['access_token'])
-                print(response)
-                conversation.append(response[0]['message'])
-                return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
-
-            if user_input['task_type'] == "List":
-                response = list_tasks(session['access_token'])
-                print(response)
-                conversation.append(response[0]['message'])
-                return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
-            
-            conversation.append(response[0]['message'])
-            print(response[0]['message'])
-            return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
-
-        except:
-            response = "Sorry I was not able to understand the prompt. Please try writing a new prompt!"
+    
+        # try:
+        if user_input['task_type'] is None or user_input['task_type'] not in ["Create", "Edit", "Delete", "List"] :
+            response = "Sorry I was not able to understand task type(Create, Edit, List, or Delete). Please try writing a new prompt which clearly talks about the task type!"
             print(response)
             conversation.append(response)
             return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+        
+        if user_input['task_name'] is None:
+            response = "Sorry I was not able to understand the task name. Please try writing a new prompt which clearly talks about the task name!"
+            print(response)
+            conversation.append(response)
+            return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+        else:
+            if user_input['task_name'][len(user_input['task_name'])-1] == ' ':
+                user_input['task_name'] = user_input['task_name'][:-1]
+
+        if user_input['task_type'] == "Create":
+            if user_input['timestamp'] is None:
+                response = "Sorry I was not able to understand the due date. Please try writing a new prompt which clearly tells what is the due date of the task! The prompt should mention the Year, day and hour of the due date!"
+                print(response)
+                conversation.append(response)
+                return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+            
+            if user_input['priority'] is None:
+                response = "Sorry I was not able to understand the priority. Priority of the task should be between 1-5.  Please try writing a new prompt which clearly tells what is the priority(1-5) of the task!"
+                print(response)
+                conversation.append(response)
+                return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+            
+            response = add_task(user_input['task_name'], user_input['timestamp'], user_input['priority'], session['access_token'])
+    
+        
+        if user_input['task_type'] == "Edit":
+            if 'priority' not in user_input:
+                user_input['priority'] = None
+            if 'timestamp' not in user_input:
+                user_input['timestamp'] = None
+
+            response = edit_task(user_input['task_name'], user_input['timestamp'], user_input['priority'], session['access_token'])
+            if response[1] == 404:
+                conversation.append(response[0]['message'])
+                print(response[0]['message'])
+                return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
+        
+        if user_input['task_type'] == "Delete":
+            print("Line 165")
+            response = delete_task(user_input['task_name'], session['access_token'])
+            print(response)
+            conversation.append(response[0]['message'])
+            return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
+
+        if user_input['task_type'] == "List":
+            response = list_tasks(session['access_token'])
+            print(response)
+            conversation.append(response[0]['message'])
+            return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
+        
+        conversation.append(response[0]['message'])
+        print(response[0]['message'])
+        return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
+
+        # except:
+        #     print(user_input)
+        #     response = "Sorry I was not able to understand the prompt. Please try writing a new prompt!"
+        #     print(response)
+        #     conversation.append(response)
+        #     return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
     
     return render_template('chatbot.html', username=session['username'])
 
