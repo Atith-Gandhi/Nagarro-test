@@ -12,7 +12,7 @@ def parse_prompt(user_prompt):
     completion = anthropic.completions.create(
         model="claude-2.1",
         max_tokens_to_sample=350,
-        prompt=f"{HUMAN_PROMPT} Get four fields - task_type(Create, Edit, Delete, List), task_name(3-4 words), timestamp(proper timestamp format), and priority of the next sentence. \"{user_prompt}\" {AI_PROMPT}",
+        prompt=f"{HUMAN_PROMPT} Get four fields - task_type(Create, Edit, Delete, List), task_name(3-4 words), timestamp(%Y-%m-%d %H:%M:%S), and priority of the next sentence. \"{user_prompt}\" {AI_PROMPT}",
     )
     print(completion.completion)
     try:

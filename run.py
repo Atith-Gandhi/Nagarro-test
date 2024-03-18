@@ -120,7 +120,7 @@ def chatbot():
 
         
         if user_input['task_type'] is None or user_input['task_type'] not in ["Create", "Edit", "Delete", "List"] :
-            response = "Sorry I was not able to understand task type(Create, Edit or Delete). Please try writing a new prompt which clearly talks about the task type!"
+            response = "Sorry I was not able to understand task type(Create, Edit, List, or Delete). Please try writing a new prompt which clearly talks about the task type!"
             print(response)
             conversation.append(response)
             return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
@@ -168,8 +168,8 @@ def chatbot():
         if user_input['task_type'] == "List":
             response = list_tasks(session['access_token'])
             print(response)
-            conversation.append(response)
-            return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+            conversation.append(response[0]['message'])
+            return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
         
         conversation.append(response[0]['message'])
         print(response[0]['message'])
