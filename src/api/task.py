@@ -68,7 +68,7 @@ def add_task(name, due_date, priority, access_token):
     # print(task)
     
     if task:
-        return {'message': f'Task with name: "name: "{name}"" already exists'}, 409
+        return {'message': f'Task with name: "{name}" already exists'}, 409
     
     task = Task(name=name, due_date=get_datetime_from_string(due_date), priority=priority, user_id=user.id)
     db.add(task)
