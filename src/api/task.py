@@ -68,19 +68,19 @@ def add_task(name, due_date, priority, access_token):
     # print(task)
     
     if task:
-        return {'message': f'Task with {name} already exists'}, 409
+        return {'message': f'Task with name: "name: "{name}"" already exists'}, 409
     
     task = Task(name=name, due_date=get_datetime_from_string(due_date), priority=priority, user_id=user.id)
     db.add(task)
     db.commit()
-    return {'message': f'Task with {name} created successfully'}, 201
+    return {'message': f'Task with name: "{name}" created successfully'}, 201
 
 def edit_task(name, due_date, priority, access_token):
     user = db.query(User).filter(User.access_token == access_token).first()
-    message = f'Task with {name} updated successfully'
+    message = f'Task with name: "{name}" updated successfully'
     task = db.query(Task).filter(Task.name == name and Task.user_id == user.id).first()
     if not task:
-        return {'message': f'Task {name} not found'}, 404
+        return {'message': f'Task name: "{name}" not found'}, 404
     if due_date is not None:
         task.due_date = get_datetime_from_string(due_date)
         message = message + f' with new due date {due_date}'
@@ -96,10 +96,10 @@ def delete_task(name, access_token):
     task = db.query(Task).filter(Task.name == name and Task.user_id == user.id).first()
     print("Line 77")
     if not task:
-        return {'message': f'Task {name} not found'}, 404
+        return {'message': f'Task with name: "{name}" not found'}, 404
     db.delete(task)
     db.commit()
-    return {'message': f'Task with name: {name} deleted successfully'}, 204
+    return {'message': f'Task with name: "{name}" deleted successfully'}, 204
 
 def list_tasks(access_token):
     user = db.query(User).filter(User.access_token == access_token).first()
@@ -107,7 +107,7 @@ def list_tasks(access_token):
     if not tasks:
         return {'message': 'No tasks found for you'}, 404
     tasks = [task.__dict__ for task in tasks]
-    print(tasks)
+    # print(tasks)
     for task in tasks:
         task['due_date'] = task['due_date'].strftime("%Y-%m-%d %H:%M:%S")
 

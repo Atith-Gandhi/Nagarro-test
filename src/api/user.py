@@ -2,7 +2,8 @@
 from flask_restx import Resource, reqparse, Namespace, fields
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
-from src.models import User, db
+from src.models import User, Task, db
+from src.email.send_mail import generate_task_email
 
 registerCtrl = Namespace('register', path = '/register', description='Register related operations')
 registerCommand = registerCtrl.model("registerTask", {
@@ -47,6 +48,12 @@ def login_user(email, password):
     if not user or not check_password_hash(user.password, password):
         return {'message': 'Invalid email or password. \n If you are not registered, Please create a new user account!'}, 401
     user.access_token = create_access_token(identity=user.id)
+    tasks = db.query(Task).filter(Task.user_id == user.id).all()
+    tasks = [task.__dict__ for task in tasks]
+    for task in tasks:
+        task['due_date'] = task['due_date'].strftime("%Y-%m-%d %H:%M:%S")
+
+    # generate_task_email(user.email, tasks)
     db.commit()
     access_token = user.access_token
     return {'access_token': access_token}, 200

@@ -4,28 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-container h2 {
+            margin-top: 0;
+        }
+
+        .chat-box {
+            overflow-y: scroll;
+            max-height: 300px;
+            padding: 10px;
+        }
+
+        .chat-box p {
+            margin: 5px 0;
+        }
+
+        .user-msg {
+            background-color: #cce5ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        .bot-msg {
+            background-color: #e6f2ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            display: inline-block;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 50px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Welcome, {{ username }}!</h2>
-    <form method="POST">
-        <label for="user_input">Ask me anything:</label>
-        <input type="text" id="user_input" name="user_input" required>
-        <button type="submit">Ask</button>
-    </form>
-    {% if conversation %}
-    <div>
-        {% set i = 0 %}
-        {% for i in range(conversation|length) %}
-            {% if i % 2 == 0 %}
-                <p><strong>You:</strong> {{ conversation[i] }}</p>
+    <div class="chat-container">
+        <h2>Welcome, {{ username }}!</h2>
+        <div class="chat-box">
+            {% if conversation %}
+                {% for i in range(conversation|length) %}
+                    {% if i % 2 == 0 %}
+                        <p class="user-msg"><strong>You:</strong> {{ conversation[i] }}</p>
+                    {% endif %}
+                    {% if i % 2 == 1 %}
+                        <p class="bot-msg"><strong>Bot:</strong> {{ conversation[i] }}</p>
+                    {% endif %}
+                {% endfor %}
             {% endif %}
-            {% if i % 2 == 1 %}
-                <p><strong>Bot:</strong> {{ conversation[i] }}</p>
-            {% endif %}
-            
-        {% endfor %}
+        </div>
+        <form method="POST">
+            <input type="text" id="user_input" name="user_input" required>
+            <button type="submit">Ask</button>
+        </form>
+        <a href="/logout">Logout</a>
     </div>
-    {% endif %}
-    <a href="/logout">Logout</a>
 </body>
 </html>

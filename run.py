@@ -35,10 +35,7 @@ def apidocs():
 
 @app.route('/')
 def index():
-    if 'access_token' in session:
-        return redirect('/chatbot')
-    else:
-        return redirect('/login')
+    return redirect('/login')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -107,7 +104,6 @@ def register():
 
 @app.route('/chatbot', methods=['GET', 'POST'])
 def chatbot():
-    print("Inside Chatbot")
     if 'username' not in session:
         return redirect('/login')
     if request.method == 'POST':
@@ -166,8 +162,8 @@ def chatbot():
             print("Line 165")
             response = delete_task(user_input['task_name'], session['access_token'])
             print(response)
-            conversation.append(response)
-            return render_template('chatbot.html', username=session['username'], response=response, conversation=conversation)
+            conversation.append(response[0]['message'])
+            return render_template('chatbot.html', username=session['username'], response=response[0]['message'], conversation=conversation)
 
         if user_input['task_type'] == "List":
             response = list_tasks(session['access_token'])
